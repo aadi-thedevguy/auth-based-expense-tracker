@@ -3,3 +3,10 @@ body {
     background-color: #141515;
     color: white;
 }
+
+.form {
+    display: flex;
+    max-width: 700px;
+    gap: 6rem;
+    margin: 2rem auto;
+}

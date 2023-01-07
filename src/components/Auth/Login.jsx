@@ -50,7 +50,8 @@ const Login = () => {
                 })
                 .then(data => {
                     setToken(data.idToken)
-                    navigate('/')
+                    localStorage.setItem('token',data.idToken)
+                    navigate('/home')
                 })
                 .catch((err) => {
                     alert(err.message);
@@ -82,7 +83,6 @@ const Login = () => {
                     <button
                         type='submit'
                         className={classes.toggle}
-                        onClick={submitHandler}
                     >
                         Login
                     </button>
