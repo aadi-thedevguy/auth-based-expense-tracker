@@ -7,13 +7,39 @@ import { AuthContext } from '../../context/authContext';
 const Login = () => {
 
     const {token,setToken} = useContext(AuthContext)
+    const navigate = useNavigate()
 
     const emailInputRef = useRef();
     const passwordInputRef = useRef();
 
     const [isLoading, setIsLoading] = useState(false);
+    const [show, setShow] = useState(false);
 
-    const navigate = useNavigate()
+    const sendEmail = async () => {
+        setIsLoading(true)
+        const email = emailInputRef.current.value
+        const url = "https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=AIzaSyBLAZfI3knkbyxNuEyi2t-QrjiOXbPCZVc"
+        const options = {
+          method: 'POST',
+          body: JSON.stringify({
+            requestType: "PASSWORD_RESET",
+            email,
+          }),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+        try {
+    
+          const res = await fetch(url, options)
+          const data = await res.json()
+          setIsLoading(false)
+          navigate('/')
+        } catch (error) {
+          console.error(error)
+        }
+    }
+
 
     const submitHandler = (event) => {
         event.preventDefault();
@@ -45,7 +71,7 @@ const Login = () => {
                         return res.json()
                     } else {
                         return res.json().then(() => {
-                            let errorMessage = 'Login failed'
+                            let errorMessage = 'Login failed, Check your Credentials'
 
                             throw new Error(errorMessage);
                         });
@@ -70,7 +96,10 @@ const Login = () => {
                     <label htmlFor='email'>Your Email</label>
                     <input type='email' id='email' required ref={emailInputRef} />
                 </div>
-                <div className={classes.control}>
+                {
+                    !show && (
+                    <>
+                    <div className={classes.control}>
                     <label htmlFor='password'>Your Password</label>
                     <input
                         type='password'
@@ -79,19 +108,38 @@ const Login = () => {
                         ref={passwordInputRef}
                     />
                 </div>
+                <div className={classes.actions}>
+                <p><a href="#" onClick={() => setShow(show => !show)}> Forgot your Password ?</a></p>
 
+                {isLoading && <p>Sending request...</p>}
+                <button
+                    type='submit'
+                    className={classes.toggle}
+                >
+                    Login
+                </button>
+                <p>Or <Link to={'/signup'}>Signup...</Link></p>
+
+            </div>
+            </>
+            )
+                }
+                {
+                    show && 
                 <div className={classes.actions}>
 
                     {isLoading && <p>Sending request...</p>}
                     <button
-                        type='submit'
+                        type='button'
                         className={classes.toggle}
+                        onClick={sendEmail}
                     >
-                        Login
+                        Send Link
                     </button>
-                    <p>Or <Link to={'/signup'}>Signup...</Link></p>
 
                 </div>
+                }
+
             </form>
         </section>
     );
