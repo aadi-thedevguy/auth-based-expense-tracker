@@ -1,7 +1,8 @@
-import { useState, useContext } from 'react'
+import { useState, useContext, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { AuthContext } from '../context/authContext'
 import UpdateProfile from './Auth/UpdateProfile'
+import Expenses from './Expense/Expenses'
 
 function Home() {
   const navigate = useNavigate()
@@ -9,10 +10,16 @@ function Home() {
   const [show, setShow] = useState(false)
   const { token, setToken } = useContext(AuthContext)
 
+  useEffect(() => {
+    if (!token) {
+      navigate('/login')
+    }
+  }, [])
+
   const handleLogout = () => {
     localStorage.removeItem('token')
     setToken('')
-    navigate('/')
+    navigate('/login')
   }
 
   const handleClick = async () => {
@@ -49,6 +56,7 @@ function Home() {
         </div>
         <p>Your Profile is Incomplete. <a href='#' onClick={() => setShow(prev => !prev)}>Complete Now</a></p>
       </div>
+      <Expenses />
       {show && <UpdateProfile />}
     </>
   )

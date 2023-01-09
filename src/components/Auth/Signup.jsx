@@ -40,7 +40,7 @@ const Signup = () => {
           setIsLoading(false);
           if (res.ok) {
              console.log('User has successfully signed up')
-             navigate('/')
+             navigate('/login')
           } else {
             return res.json().then(() => {
               let errorMessage = 'Signup failed'
@@ -91,7 +91,7 @@ const Signup = () => {
             >
               Create new account
             </button>
-            <p>Already have an account ? <Link to={'/'}>Login...</Link></p>
+            <p>Already have an account ? <Link to={'/login'}>Login...</Link></p>
             
           </div>
         </form>
