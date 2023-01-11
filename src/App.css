@@ -22,7 +22,14 @@ button {
     padding: 0.5rem 1.5rem;
     background-color: white;
   }
-  
+  .delete {
+    background-color: red;
+    color: white;
+  }
+  .edit {
+    color: white;
+    background-color: green;
+  }
 .expenses {
   max-width: 830px;
   margin-inline: auto;
