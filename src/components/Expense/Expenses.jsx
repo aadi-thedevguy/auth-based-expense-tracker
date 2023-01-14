@@ -1,15 +1,24 @@
 import { useEffect, useState } from "react"
+import { useDispatch, useSelector } from "react-redux"
 import ExpenseForm from "./ExpenseForm"
 import UpdateForm from "./UpdateForm"
+import { expensesActions } from "../../store/expenses" 
 
 function Expenses() {
 
     const url = "https://fir-99cf8-default-rtdb.asia-southeast1.firebasedatabase.app/expenses.json"
 
-    const [expenses, setExpenses] = useState([])
+    const expenses = useSelector(state => state.expense.expenses)
+    const dispatch = useDispatch()
+
     const [show, setShow] = useState(false)
     const [id, setId] = useState('')
     const [data,setData] = useState({})
+
+    let amount = 0
+    expenses.forEach(expense => {
+        amount += Number(expense.amount)
+    })
 
     useEffect(() => {
      getExpenses()
@@ -27,7 +36,7 @@ function Expenses() {
                   category : data[key].category
               })
           }
-          setExpenses(arr)
+          dispatch(expensesActions.setExpenses(arr))
         })
     }
 
@@ -69,7 +78,7 @@ function Expenses() {
 
         })
         const filteredExpenses = expenses.filter(expense => expense.id != id)
-        setExpenses(filteredExpenses)
+        dispatch(expensesActions.setExpenses(filteredExpenses))
     }
 
     const editExpense = (expense,id) => {
@@ -95,7 +104,7 @@ function Expenses() {
                 textTransform: 'uppercase',
                 textAlign: 'center',
                 color: 'cornflowerblue',
-            }}>Your Expenses</h1>
+            }}>Your Expenses {amount > 1000 ? <button className="btn">Activate Premium</button> : ''}</h1>
             <section className="expenses">
 
                 {
