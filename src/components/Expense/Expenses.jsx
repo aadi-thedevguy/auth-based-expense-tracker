@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux"
 import ExpenseForm from "./ExpenseForm"
 import UpdateForm from "./UpdateForm"
 import { expensesActions } from "../../store/expenses" 
+import {themeActions} from '../../store/theme'
 
 function Expenses() {
 
@@ -15,14 +16,39 @@ function Expenses() {
     const [id, setId] = useState('')
     const [data,setData] = useState({})
 
+    useEffect(() => {
+        getExpenses()
+        downloadFile()
+       }, [])
+
     let amount = 0
     expenses.forEach(expense => {
         amount += Number(expense.amount)
     })
 
-    useEffect(() => {
-     getExpenses()
-    }, [])
+    const downloadFile = () => {
+        let csvText = ''
+
+        expenses.forEach((expense, index)=> {
+          if (!index) {
+            return (csvText += `${[
+              'AMOUNT',
+              'DESCRIPTION',
+              'CATEGORY'
+            ].join(',')}\r\n`)
+          }
+    
+          const properValues = [expense.amount,expense.description,expense.category];
+          return (csvText += `${properValues.join(',')}\r\n`);
+        });
+       const a = document.getElementById('download-file')
+       const blob = new Blob([csvText])
+       a.href = URL.createObjectURL(blob)
+    }
+
+    const setDarkMode = () => {
+      dispatch(themeActions.darkMode())
+    }
     
     const getExpenses = () => {
         fetch(url).then(res => res.json())
@@ -104,7 +130,15 @@ function Expenses() {
                 textTransform: 'uppercase',
                 textAlign: 'center',
                 color: 'cornflowerblue',
-            }}>Your Expenses {amount > 1000 ? <button className="btn">Activate Premium</button> : ''}</h1>
+            }}>Your Expenses </h1>
+           
+            <div style={{
+                textAlign: 'center',
+                margin: '1rem'
+            }}>
+                <a id="download-file" download={"file.csv"}> Download File</a>
+                { amount > 1000 &&  <button onClick={setDarkMode}>Activate Premium</button> }
+            </div>
             <section className="expenses">
 
                 {

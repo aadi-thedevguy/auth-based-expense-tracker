@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
 import { authActions } from '../store/auth'
+import { themeActions } from '../store/theme'
 import UpdateProfile from './Auth/UpdateProfile'
 import Expenses from './Expense/Expenses'
 
@@ -11,6 +12,8 @@ function Home() {
 
   const [show, setShow] = useState(false)
   const token = useSelector(state => state.auth.token)
+  const isDark = useSelector(state => state.theme.isDark)
+
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -18,6 +21,10 @@ function Home() {
       navigate('/login')
     }
   }, [])
+
+  const onClick = () => {
+    dispatch(themeActions.darkMode())
+  }
 
   const handleLogout = () => {
     localStorage.removeItem('token')
@@ -58,6 +65,7 @@ function Home() {
 
         </div>
         <p>Your Profile is Incomplete. <a href='#' onClick={() => setShow(prev => !prev)}>Complete Now</a></p>
+        <button onClick={onClick}>Toggle Theme</button>
       </div>
       <Expenses />
       {show && <UpdateProfile />}
