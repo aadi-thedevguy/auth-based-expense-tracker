@@ -26,11 +26,16 @@ button {
     height: max-content;
     border-radius: 100px;
     color: #333;
-    font-weight: bold;
+    font-weight: 600;
     text-transform: uppercase;
     padding: 0.5rem 1.5rem;
     background-color: white;
   }
+
+  button:hover, button:focus {
+    opacity: 0.9;
+  }
+
   .delete {
     background-color: red;
     color: white;

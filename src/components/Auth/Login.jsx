@@ -81,8 +81,7 @@ const Login = () => {
                     }
                 })
                 .then(data => {
-                    dispatch(authActions.login(data.idToken))
-                    localStorage.setItem('token',data.idToken)
+                    dispatch(authActions.login(data))
                     navigate('/')
                 })
                 .catch((err) => {

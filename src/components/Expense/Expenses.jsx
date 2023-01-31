@@ -7,14 +7,16 @@ import {themeActions} from '../../store/theme'
 
 function Expenses() {
 
-    const url = "https://fir-99cf8-default-rtdb.asia-southeast1.firebasedatabase.app/expenses.json"
-
     const expenses = useSelector(state => state.expense.expenses)
+    const user = useSelector(state => state.auth.user)
     const dispatch = useDispatch()
+    const userEmail = user.email?.replace(/\.|@/g, "")
 
     const [show, setShow] = useState(false)
     const [id, setId] = useState('')
     const [data,setData] = useState({})
+
+    const url = `https://fir-99cf8-default-rtdb.asia-southeast1.firebasedatabase.app/${userEmail}/expenses.json`
 
     useEffect(() => {
         getExpenses()
@@ -67,7 +69,7 @@ function Expenses() {
     }
 
     const getData = (id) => {
-        fetch(`https://fir-99cf8-default-rtdb.asia-southeast1.firebasedatabase.app/expenses/${id}.json`).then(res => res.json())
+        fetch(`https://fir-99cf8-default-rtdb.asia-southeast1.firebasedatabase.app/${userEmail}/expenses/${id}.json`).then(res => res.json())
         .then(data => {
             setId(id)
           setData(data)
@@ -87,7 +89,6 @@ function Expenses() {
 
             const res = await fetch(url, options)
             const data = await res.json()
-            console.log(data)
           
             getExpenses()
         } catch (error) {
@@ -96,7 +97,7 @@ function Expenses() {
     }
 
     const deleteExpense =  (id) => {
-        fetch(`https://fir-99cf8-default-rtdb.asia-southeast1.firebasedatabase.app/expenses/${id}.json`,{
+        fetch(`https://fir-99cf8-default-rtdb.asia-southeast1.firebasedatabase.app/${userEmail}/expenses/${id}.json`,{
             method : 'DELETE'
         })
         .then(() => {
@@ -108,7 +109,7 @@ function Expenses() {
     }
 
     const editExpense = (expense,id) => {
-        fetch(`https://fir-99cf8-default-rtdb.asia-southeast1.firebasedatabase.app/expenses/${id}.json`,{
+        fetch(`https://fir-99cf8-default-rtdb.asia-southeast1.firebasedatabase.app/${userEmail}/expenses/${id}.json`,{
             method : 'PATCH',
             body : JSON.stringify(expense),
             headers: {
@@ -116,7 +117,6 @@ function Expenses() {
             },
         })
         .then(data => {
-            console.log(data)
             getExpenses()
         })
     }
@@ -137,7 +137,7 @@ function Expenses() {
                 margin: '1rem'
             }}>
                 <a id="download-file" download={"file.csv"}> Download File</a>
-                { amount > 1000 &&  <button onClick={setDarkMode}>Activate Premium</button> }
+                { amount >= 1000 &&  <button onClick={setDarkMode}>Activate Premium</button> }
             </div>
             <section className="expenses">
 

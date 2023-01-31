@@ -41,6 +41,7 @@
     flex-direction: column;
     align-items: center;
   }
-
   
-  
+  .actions a {
+    color: hsl(300, 80%, 20%);
+  }  
